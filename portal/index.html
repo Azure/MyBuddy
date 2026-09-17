@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Buddy | Less to remember. More to do.</title>
+  <link rel="icon" type="image/svg+xml" href="/buddy-logo.svg">
+  <script nonce="__NONCE__">
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme = param === "dark" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    /* My Buddy's user-selected sky palette; components keep shared theme tokens. */
+    :root {
+      --cp-bg: #f5fbff;
+      --cp-bg-elevated: #e3f3fd;
+      --cp-surface-soft: #f5fbff;
+      --cp-border: #cadde9;
+      --cp-border-strong: #75adca;
+      --cp-text: #163f58;
+      --cp-text-muted: #4d6d80;
+      --cp-text-soft: #567688;
+      --cp-accent: #0b83bc;
+      --cp-accent-hover: #096b99;
+      --cp-accent-soft: #e3f3fd;
+      --cp-highlight: #b6e7fc;
+      --cp-link: #096b99;
+    }
+    html[data-theme="dark"] {
+      --cp-bg: #172b38;
+      --cp-bg-elevated: #122531;
+      --cp-surface: #203b4b;
+      --cp-surface-soft: #254353;
+      --cp-border: #3d6075;
+      --cp-border-strong: #6998b5;
+      --cp-text: #e0f2fc;
+      --cp-text-muted: #adc8d8;
+      --cp-text-soft: #b6d2e3;
+      --cp-accent: #7bd0fa;
+      --cp-accent-hover: #a2e0fc;
+      --cp-accent-soft: #264f66;
+      --cp-accent-fg: #102c3e;
+      --cp-highlight: #30576d;
+      --cp-overlay: rgba(18, 37, 49, 0.88);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font: 15px/1.5 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; border: 1px solid var(--cp-border); border-radius: .625rem; padding: 9px 14px; color: var(--cp-text); background: var(--cp-surface); }
+    button:hover { border-color: var(--cp-border-strong); background: var(--cp-surface-soft); }
+    button:disabled { cursor: default; opacity: .5; }
+    button.primary { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    button.primary:hover { background: var(--cp-accent-hover); }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 3px; }
+    a { color: var(--cp-link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, p { margin-top: 0; }
+    .app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    aside { padding: 32px 20px; background: var(--cp-bg-elevated); border-right: 1px solid var(--cp-border); display: flex; flex-direction: column; gap: 28px; }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .mark { width: 56px; height: 56px; flex-shrink: 0; }
+    .brand strong { display: block; font-size: 24px; letter-spacing: -.8px; }
+    .small { font-size: 12px; color: var(--cp-text-soft); }
+    nav { display: grid; gap: 8px; }
+    nav button { text-align: left; border-color: var(--cp-bg-elevated); background: var(--cp-bg-elevated); font-weight: 600; }
+    nav button.selected { color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .sidebar-bottom { margin-top: auto; padding: 16px; border: 1px solid var(--cp-border); border-radius: 12px; }
+    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--cp-success); margin-right: 6px; }
+    main { max-width: 1512px; padding: 36px 44px; width: 100%; }
+    header { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 28px; }
+    .eyebrow { font-size: 11px; letter-spacing: 1.4px; font-weight: 700; text-transform: uppercase; color: var(--cp-accent); }
+    h1 { font-size: 32px; letter-spacing: -1px; margin: 6px 0; line-height: 1.2; }
+    .muted { color: var(--cp-text-muted); }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric { padding: 20px; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-surface); }
+    .metric strong { display: block; font-size: 30px; line-height: 1.2; margin-bottom: 4px; }
+    .metric:first-child { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 24px 0 16px; flex-wrap: wrap; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters button { padding: 6px 12px; border-radius: 20px; font-size: 13px; }
+    .filters button.selected { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    input, select, textarea { background: var(--cp-surface); color: var(--cp-text); border: 1px solid var(--cp-border); border-radius: .625rem; padding: 10px 12px; max-width: 100%; }
+    textarea { width: 100%; resize: vertical; min-height: 84px; }
+    .search { min-width: 230px; }
+    .list { display: grid; gap: 12px; }
+    .item { display: grid; grid-template-columns: 40px 1fr auto; gap: 16px; background: var(--cp-surface); border: 1px solid var(--cp-border); padding: 20px; border-radius: 16px; align-items: start; }
+    .source-icon { border: 1px solid var(--cp-border); border-radius: .625rem; height: 36px; display: grid; place-items: center; font: 700 12px Consolas, "Courier New", Courier, monospace; color: var(--cp-accent); }
+    .item h3 { font-size: 16px; margin: 8px 0; line-height: 1.45; }
+    .item p { margin-bottom: 8px; font-size: 13px; color: var(--cp-text-muted); }
+    .item > div { min-width: 0; }
+    .item h3, .item p, .tags { overflow-wrap: anywhere; }
+    details summary { cursor: pointer; color: var(--cp-text-muted); font-size: 12px; }
+    details[open] summary { margin-bottom: 10px; }
+    .item-details { margin: 12px 0; }
+    .panel > p:last-child { margin-bottom: 0; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 11px; color: var(--cp-text-soft); }
+    .tag { background: var(--cp-surface-soft); border: 1px solid var(--cp-border); padding: 2px 7px; border-radius: 5px; }
+    .tag.accent { background: var(--cp-accent-soft); color: var(--cp-accent); border-color: var(--cp-accent-soft); }
+    .tag.high { color: var(--cp-danger); }
+    .item-actions { display: grid; gap: 8px; min-width: 130px; }
+    .item-actions button { font-size: 12px; }
+    .notice { border: 1px solid var(--cp-border); background: var(--cp-bg-elevated); padding: 12px 16px; border-radius: .625rem; font-size: 13px; margin: 16px 0; }
+    .error { color: var(--cp-danger); border-color: var(--cp-danger); }
+    .empty { text-align: center; padding: 48px 24px; border: 1px dashed var(--cp-border-strong); border-radius: 16px; color: var(--cp-text-muted); }
+    .empty h2 { color: var(--cp-text); font-size: 20px; }
+    .panel { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+    pre { font: 12px/1.7 Consolas, "Courier New", Courier, monospace; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--cp-text); }
+    .job-result { max-height: 400px; overflow: auto; }
+    .conversation-history { display: grid; gap: 12px; max-height: 360px; overflow: auto; margin-bottom: 20px; padding: 4px; }
+    .turn { border: 1px solid var(--cp-border); padding: 14px 16px; border-radius: 14px; background: var(--cp-surface-soft); }
+    .turn.user { background: var(--cp-accent-soft); margin-left: 28px; }
+    .turn.assistant { margin-right: 28px; }
+    .turn pre { font-family: inherit; font-size: 14px; margin-bottom: 0; }
+    dialog { padding: 0; border: 1px solid var(--cp-border); border-radius: 16px; color: var(--cp-text); background: var(--cp-surface); width: 720px; max-width: 94vw; max-height: 90vh; box-shadow: var(--cp-shadow); }
+    dialog::backdrop { background: var(--cp-overlay); }
+    .dialog-inner { padding: 28px; }
+    .dialog-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 16px; }
+    .dialog-head h2 { font-size: 22px; margin: 0; }
+    .field { display: grid; gap: 6px; margin: 16px 0; }
+    .field > span { font-size: 13px; font-weight: 600; }
+    .row { display: flex; gap: 16px; }
+    .row > * { flex: 1; }
+    .confirm { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin: 16px 0; }
+    .preview { border: 1px solid var(--cp-accent); border-radius: 12px; padding: 16px; margin-top: 20px; background: var(--cp-accent-soft); }
+    .preview dl { display: grid; grid-template-columns: 128px 1fr; gap: 8px; font-size: 13px; margin: 12px 0; }
+    dt { color: var(--cp-text-muted); } dd { margin: 0; overflow-wrap: anywhere; }
+    .hidden, [hidden] { display: none !important; }
+    footer { margin-top: 28px; display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--cp-text-soft); }
+    @media (max-width: 1050px) { .app { grid-template-columns: 224px minmax(0, 1fr); } main { padding: 28px 24px; } header { flex-direction: column; } .metrics { gap: 8px; } .metric { padding: 16px; } }
+    @media (max-width: 760px) { .app { display: block; } aside { padding: 16px; gap: 12px; } aside nav { display: flex; flex-wrap: wrap; } .sidebar-bottom { display: none; } main { padding: 24px 16px; } .metrics { grid-template-columns: repeat(2, 1fr); } .item { grid-template-columns: 32px minmax(0, 1fr); padding: 16px; } .item-actions { grid-column: 2; display: flex; flex-wrap: wrap; } .row { display: block; } .search { width: 100%; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><img class="mark" src="/buddy-logo.svg" alt="My Buddy Loop B logo"><div><strong>My Buddy</strong><span class="small">Your work, together.</span></div></div>
+    <nav aria-label="Main navigation">
+      <button class="selected" data-page="inbox">Attention inbox</button>
+      <button data-page="progress">In progress</button>
+      <button data-page="jobs">My work &amp; sessions</button>
+      <button data-page="connections">Sources &amp; scope</button>
+    </nav>
+    <div class="sidebar-bottom"><strong>Context here. Work in Copilot.</strong><p class="small">Approve once. Continue the same session.</p></div>
+  </aside>
+  <main>
+    <header>
+      <div><div class="eyebrow">Your work companion</div><h1 id="page-title">Less to remember. More to do.</h1><div class="muted">Your attention. Your sessions. One place.</div></div>
+      <div><button id="scan" class="primary">Scan for updates</button><div class="small">Full scan: Run now in Scout, or daily at 9 AM.</div><div id="scan-status" class="small" role="status" aria-live="polite">No scan yet</div></div>
+    </header>
+    <div id="message" class="notice hidden" role="status" aria-live="polite"></div>
+    <div id="metrics" class="metrics"></div>
+    <section id="inbox-page">
+      <div class="bar"><div class="filters" id="filters">
+        <button data-filter="all" class="selected">All sources</button><button data-filter="awaiting-user">Waiting for you</button><button data-filter="pull-requests">Pull requests</button><button data-filter="email">Important email</button><button data-filter="teams">Teams</button><button data-filter="documents">Documents</button><button data-filter="closed">Done / dismissed</button>
+      </div><input id="search" class="search" type="search" placeholder="Find a task..." aria-label="Search attention items"></div>
+      <div class="notice">Candidates need review. Publishing needs separate approval. Done updates Buddy only.</div>
+      <div id="items" class="list"></div>
+    </section>
+    <section id="jobs-page" hidden><h2>Your saved sessions</h2><p class="muted">Continue in Copilot CLI, with its history intact.</p><div id="jobs"></div></section>
+    <section id="connections-page" hidden><h2>Sources &amp; scope</h2><div class="panel"><p id="scope-summary" class="muted"></p></div><details><summary>Recent scans</summary><div id="scan-history"></div></details></section>
+    <footer><span>7-day view · carryover labelled · IcM excluded</span><span id="last-update">Not refreshed yet</span></footer>
+  </main>
+</div>
+<dialog id="task-dialog" aria-labelledby="task-heading">
+  <div class="dialog-inner">
+    <div class="dialog-head"><h2 id="task-heading">Work on this</h2><button data-close="task-dialog" aria-label="Close task dialog">Close</button></div>
+    <p id="task-title" class="muted"></p>
+    <div id="conversation-status" class="notice" hidden></div>
+    <div id="conversation-session" class="small"></div>
+    <div id="conversation-history" class="conversation-history" hidden aria-label="Work item conversation"></div>
+    <div class="row">
+      <label class="field"><span>Work mode</span><select id="task-mode"><option value="review">Review — read-only instructions</option><option value="develop">Develop — local changes, no push</option><option value="specify">Specify — describe the task</option></select></label>
+      <label class="field"><span>Repository / checkout</span><select id="task-repo"></select></label>
+    </div>
+    <label class="field"><span>Agent</span><select id="task-agent"><option value="__default_cli__">Default CLI</option></select></label>
+    <p id="agent-note" class="small"></p>
+    <label id="permission-field" class="field" hidden><span>CLI permissions for this task</span><select id="task-permissions"><option value="native">Use existing native CLI permissions</option><option value="full">Full CLI tools — automatic tool approvals</option></select></label>
+    <p id="mode-help" class="small">Review mode does not edit files or post replies.</p>
+    <p id="source-root" class="small"></p>
+    <label class="field"><span id="task-text-label">Task instructions</span><textarea id="task-text" rows="5"></textarea></label>
+    <label class="confirm" hidden><input type="checkbox" id="task-init" disabled><span>Initialize environment</span></label>
+    <div class="notice">All native tools and MCPs stay available. Work modes are instructions, not tool filters. Full tools uses <code>--allow-all</code> for this session. Shared checkout; publishing needs separate approval.</div>
+    <button id="prepare" class="primary">Preview task</button>
+    <button id="retry-task" hidden>Use last task for retry</button>
+    <button id="mark-done" hidden>Mark this item done</button>
+    <div id="task-error" class="notice error hidden" role="alert"></div>
+    <div id="task-preview" class="preview" hidden>
+      <strong>Review your task</strong><dl id="plan-details"></dl><pre id="plan-task"></pre>
+      <details><summary>Full operating contract</summary><pre id="plan-contract"></pre></details>
+      <label class="confirm"><input type="checkbox" id="confirm-task"><span>I approve this task and the settings above, including automatic tool use if selected. No publication.</span></label>
+      <button id="approve" class="primary" disabled>Approve &amp; open Copilot</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="session-dialog" aria-labelledby="session-heading">
+  <div class="dialog-inner">
+    <div class="dialog-head"><h2 id="session-heading">Saved session needs attention</h2><button data-close="session-dialog" aria-label="Close session notice">Close</button></div>
+    <p id="session-work-title" class="muted"></p>
+    <p id="session-notice" class="notice" role="alert"></p>
+    <p id="session-identity" class="small"></p>
+    <p class="small">Buddy has not stopped any process, replayed the task, or opened a duplicate session.</p>
+  </div>
+</dialog>
+<dialog id="feedback-dialog" aria-labelledby="feedback-heading">
+  <div class="dialog-inner">
+    <div class="dialog-head"><h2 id="feedback-heading">Update this item</h2><button data-close="feedback-dialog">Close</button></div>
+    <p id="feedback-title" class="muted"></p>
+    <label class="field"><span>How should this item be treated?</span><select id="feedback-status"><option value="open">Still needs my attention</option><option value="waiting">Waiting on someone else</option><option value="done">Done</option><option value="dismissed">Not needed / not mine</option></select></label>
+    <label class="field"><span>Optional context for the next task</span><textarea id="feedback-note" placeholder="Already handled, waiting for review, focus on this part..."></textarea></label>
+    <p class="small">Private to Buddy. The source stays unchanged.</p>
+    <button id="save-feedback" class="primary">Save feedback</button>
+  </div>
+</dialog>
+<script nonce="__NONCE__">
+  const $ = id => document.getElementById(id);
+  const make = (tag, text, cls) => { const el = document.createElement(tag); if (text != null) el.textContent = text; if (cls) el.className = cls; return el; };
+  let state = {items:[], feedback:{}, jobs:[], conversations:[], coverage:{}}, filter = 'all', page = 'inbox', selected, preview, doctor, previewRevision=0, suggestedTask='', continuing=false, renderedConversation='';
+  const openingSessions=new Set();
+  const expandedDetails=new Set();
+  const labels = {ado:'Azure DevOps PR',github:'GitHub PR',email:'Important email',teams:'Teams',documents:'Documents'};
+  const isPullRequest = item => ['ado','github'].includes(item?.source);
+  const documentLabels = {word:'Word',powerpoint:'PowerPoint',excel:'Excel'};
+  function message(value, error = false) { $('message').textContent = value; $('message').className = 'notice' + (error ? ' error' : ''); }
+  async function api(route, data) {
+    const options = data === undefined ? {} : {method:'POST',headers:{'Content-Type':'application/json','X-Buddy-Action':'1'},body:JSON.stringify(data)};
+    const response = await fetch('/api/' + route, options);
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Request failed.');
+    return result;
+  }
+  function feedbackFor(item) { return Object.hasOwn(state.feedback,item.id) ? state.feedback[item.id] : {status:'open',note:''}; }
+  function conversationFor(item) { return state.conversations?.find(entry=>entry.itemId===item.id); }
+  const nativeTask = conversation => conversation?.execution==='native-interactive';
+  const busy = conversation => ['running','queued-scout','running-scout','dispatching','native-starting','native-active','native-unavailable'].includes(conversation?.status) ||
+    (nativeTask(conversation)&&conversation.native?.safeToClose!==true);
+  const canOpen = conversation => nativeTask(conversation)||!busy(conversation);
+  const statusLabel = status => ({running:'Working on it', 'awaiting-user':'Waiting for you', 'in-cli':'Continue in CLI',
+    'native-starting':'Opening your CLI tab', 'native-active':'Live in CLI', 'native-closed':'CLI closed - review outcome',
+    'native-failed':'CLI needs attention', 'native-orphaned':'Check saved CLI session', 'native-unavailable':'CLI status unavailable',
+    'queued-scout':'Queued for Scout', 'running-scout':'Scout is working', dispatching:'Connecting to Scout',
+    failed:'Needs your input', interrupted:'Interrupted — check before retrying', closed:'Done / dismissed'}[status]||status);
+  function closed(item) { return ['done','dismissed'].includes(feedbackFor(item).status); }
+  function bucket(item) {
+    const conversation=conversationFor(item);
+    if(conversation && conversation.status!=='closed') return busy(conversation)?'in-progress':'needs-you';
+    return feedbackFor(item).status === 'waiting' ? 'waiting' : item.bucket;
+  }
+  const when = value => value ? new Date(value).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Not yet';
+  function scopeSummary(coverage) {
+    const names={ado:'ADO',github:'GitHub',email:'Email',teams:'Teams',documents:'Documents'};
+    const states={complete:'scanned',partial:'partial',failed:'unavailable','not-loaded':'not scanned','awaiting-scout':'awaiting Scout'};
+    const statuses=Object.entries(names).map(([key,label])=>{
+      const entry=coverage[key]||{};
+      const date=entry.asOf?new Date(entry.asOf).toLocaleDateString([],{month:'short',day:'numeric'}):'';
+      return `${label}: ${states[entry.status]||'not scanned'}${date?' ('+date+')':''}`;
+    }).join('; ');
+    const auth=Object.values(coverage).some(entry=>/403|401|authenticat|sign.in/i.test(entry.note||'')) ?
+      ' Some CLI connectors need authentication.' : '';
+    return `Important email, Teams, Office documents and ADO/GitHub PRs, including verified Agency work. ${statuses}.${auth} Scans resume from each source's checkpoint, capped at seven days. Older items stay until you close them; IcM is excluded.`;
+  }
+  function completionButton(item) {
+    const button=make('button',closed(item)?'Reopen work':'Mark work as done');
+    button.dataset.action='complete-work';
+    button.disabled=busy(conversationFor(item));
+    button.title=nativeTask(conversationFor(item))&&busy(conversationFor(item))
+      ?conversationFor(item).native?.message||'Close the native CLI after reviewing its outcome before marking this work done.'
+      :'Only updates Buddy. Does not merge, resolve comments, or close the native CLI.';
+    button.addEventListener('click',async()=>{
+      button.disabled=true;
+      try {
+        await api('feedback',{id:item.id,status:closed(item)?'open':'done',note:feedbackFor(item).note||''});
+        await load();message('Status saved. Source and Copilot session unchanged.');
+      } catch(error) {message(error.message,true);}
+      finally {render();}
+    });
+    return button;
+  }
+  function switchPage(value) {
+    page=value;
+    for (const name of ['inbox','jobs','connections']) $(name+'-page').hidden=name==='inbox'?!['inbox','progress'].includes(value):name!==value;
+    document.querySelectorAll('[data-page]').forEach(button=>button.classList.toggle('selected',button.dataset.page===value));
+    $('page-title').textContent = value==='inbox' ? 'Less to remember. More to do.' : value==='progress'?'Work in progress':value==='jobs' ? 'Pick up where you left off.' : 'Sources & scope';
+    render();
+  }
+  function render() {
+    const open = state.items.filter(item=>!closed(item));
+    $('metrics').replaceChildren(...[
+      [open.filter(item=>bucket(item)==='needs-you').length,'Need your attention'],
+      [open.filter(item=>bucket(item)==='waiting').length,'Waiting on others'],
+      [open.filter(item=>bucket(item)==='carryover').length,'Older carryover'],
+      [open.filter(item=>conversationFor(item)?.status!=='closed'&&conversationFor(item)).length,'Work in progress']
+    ].map(([value,label])=>{const box=make('div',null,'metric');box.append(make('strong',value),make('span',label,'muted'));return box;}));
+    const query=$('search').value.toLowerCase();
+    const items=state.items.filter(item=>(filter==='closed'?closed(item):!closed(item)) &&
+      (page!=='progress'||!!conversationFor(item)) &&
+      (['all','closed'].includes(filter)||item.source===filter||(filter==='pull-requests'&&isPullRequest(item))||(filter==='awaiting-user'&&['awaiting-user','in-cli','failed','interrupted','native-closed','native-failed','native-orphaned','native-unavailable'].includes(conversationFor(item)?.status))) &&
+      (item.title+' '+item.evidence+' '+feedbackFor(item).note).toLowerCase().includes(query));
+    $('items').replaceChildren(...items.map(item=>{
+      const card=make('article',null,'item'); card.dataset.itemId=item.id;
+      card.append(make('div',isPullRequest(item)?'PR':item.source==='email'?'@':item.source==='documents'?({word:'W',powerpoint:'P',excel:'X'}[item.documentType]||'D'):'T','source-icon'));
+      const content=make('div'), tags=make('div',null,'tags');
+      const conversation=conversationFor(item);
+      tags.append(make('span',labels[item.source],'tag'),make('span',closed(item)?feedbackFor(item).status:conversation?statusLabel(conversation.status):({'needs-you':'Needs you',waiting:'Waiting',carryover:'Older carryover'}[bucket(item)]),'tag accent'));
+      if(item.priority==='high')tags.append(make('span','High priority','tag high'));
+      if(item.repository)tags.append(make('span',item.repository,'tag'));
+      if(item.retainedFromPreviousScan)tags.append(make('span','Previous scan - not refreshed','tag'));
+      if(item.readiness)tags.append(make('span',({'blocked':'Merge blocked','unknown':'Merge readiness unknown','merge-ready-candidate':'Merge candidate - approval required','not-open':'PR not open'}[item.readiness.status]),'tag'));
+      if(item.documentType)tags.append(make('span',documentLabels[item.documentType],'tag'),
+        make('span',item.commentStatus==='active'?'Active comments verified':item.commentStatus==='unknown'?'Comment status unverified':item.commentStatus==='resolved'?'Comments resolved':'Review / input request','tag'));
+      content.append(tags,make('h3',item.title),make('p',item.action));
+      const details=make('details',null,'item-details');
+      details.open=expandedDetails.has(item.id);
+      details.addEventListener('toggle',()=>{
+        if(!details.isConnected)return;
+        if(details.open)expandedDetails.add(item.id);else expandedDetails.delete(item.id);
+      });
+      details.append(make('summary','Context & source'),make('p',item.evidence));
+      if(nativeTask(conversation)&&conversation.status!=='closed')content.append(make('p',
+        conversation.native?.message||'Follow this task in its linked CLI tab.','small'));
+      if(item.coverageNote)details.append(make('p',item.coverageNote,'small'));
+      if(feedbackFor(item).note) content.append(make('p','Your context: '+feedbackFor(item).note));
+      const provenance=make('div',null,'tags'); provenance.append(make('span',item.provenance));
+      if(item.url){const link=make('a','Open source ↗');link.href=item.url;link.target='_blank';link.rel='noopener noreferrer';provenance.append(link);}
+      if(item.deadline)provenance.append(make('span','Due: '+item.deadline));
+      if(item.statusVerifiedAt)provenance.append(make('span','Comments checked: '+when(item.statusVerifiedAt)));
+      if(item.readiness?.observedAt)provenance.append(make('span','PR checked: '+when(item.readiness.observedAt)));
+      details.append(provenance);content.append(details);card.append(content);
+      const actions=make('div',null,'item-actions');
+      const button=make('button',conversation?'Continue conversation':'Work on this','primary');
+      button.disabled=conversation?.handler==='cli'&&(!canOpen(conversation)||openingSessions.has(conversation.id));
+      if(conversation?.handler==='cli')button.title='Open or focus the linked Copilot CLI session. No message is sent.';
+      button.addEventListener('click',()=>continueItem(item));actions.append(button);
+      actions.append(completionButton(item));
+      const feedback=make('button','Give feedback');feedback.addEventListener('click',()=>openFeedback(item));actions.append(feedback);card.append(actions);
+      return card;
+    }));
+    if(!items.length){const empty=make('div',null,'empty');empty.append(make('h2',state.items.length?'Nothing in this view.':'Start with a scan.'),make('p',state.items.length?'Try another filter or scan for updates.':'Scan your sources for real work.'));$('items').append(empty);}
+    $('jobs').replaceChildren(...(state.conversations||[]).map(conversation=>{
+      const item=state.items.find(entry=>entry.id===conversation.itemId)||conversation.itemSnapshot;
+      const name=conversation.handler==='scout'?'Scout':conversation.input?.agent==='__default_cli__'?'Default CLI':conversation.input?.agent||'CLI';
+      const card=make('div',null,'panel');card.append(make('span',statusLabel(conversation.status),'tag accent'),make('h3',item?.title||'Work item'),make('p',name,'small'));
+      if(conversation.handler==='cli'){
+        card.append(make('p',conversation.input?.task||'Linked Copilot task.','muted'),
+          make('p','Tab: '+(conversation.sessionTitle||'Named when reopened'),'small'),
+          make('p','Session: '+(conversation.sessionId||'not recorded'),'small'),
+          make('p','Copilot owns the conversation. Buddy remembers the link.','small'));
+        if(nativeTask(conversation))card.append(make('p',conversation.native?.message||'View live progress and answer questions in the linked CLI tab.','small'));
+        if(conversation.nativeOpenedAt)card.append(make('p','Last opened from Buddy: '+when(conversation.nativeOpenedAt),'small'));
+        const last=conversation.turns.findLast(turn=>turn.role==='assistant');
+        if(last){
+          const details=make('details'),summary=make('summary','Earlier result (snapshot)');
+          details.append(summary,make('pre',last.content,'job-result'));card.append(details);
+        }
+      } else {
+        const last=conversation.turns.at(-1);if(last)card.append(make('pre',last.content,'job-result'));
+      }
+      const button=make('button','Continue conversation','primary');
+      button.disabled=conversation.handler==='cli'&&(!canOpen(conversation)||openingSessions.has(conversation.id));
+      button.addEventListener('click',()=>continueItem(item));card.append(button);
+      if(state.items.some(entry=>entry.id===item.id))card.append(completionButton(item));
+      return card;
+    }));
+    if(!state.conversations?.length)$('jobs').append(make('div','Start a task to save its session here.','empty'));
+    $('scope-summary').textContent=scopeSummary(state.coverage);
+    const scan=state.scan?.active||state.scan?.last;
+    $('scan').disabled=!!state.scan?.active;
+    $('scan').textContent=state.scan?.active?'Scanning...':'Scan for updates';
+    $('scan-status').textContent=!scan?'First scan covers up to seven days.'
+      :state.scan?.active?(['queued','dispatched'].includes(scan.worker.status)
+        ?'PRs updating; choose Run now in Scout for email, Teams and docs.':'Scanning changes since the last checkpoints.')
+      :`Last scan: ${when(scan.finishedAt)} · ${scan.status}`;
+    $('scan-history').replaceChildren(...(state.scan?.history||[]).map(run=>{
+      const card=make('div',null,'notice');
+      card.append(make('strong',`${when(run.requestedAt)} · ${run.status}`));
+      for(const [source,entry] of Object.entries(run.sources))card.append(make('p',
+        `${labels[source]}: ${when(entry.since)} – ${when(entry.until)} · ${entry.status}${entry.skippedUnchanged?' · '+entry.skippedUnchanged+' unchanged':''}${entry.gap?' · older activity outside 7-day cap':''}`,'small'));
+      return card;
+    }));
+    const latest=Object.values(state.coverage).map(v=>v.asOf).filter(Boolean).sort().at(-1);
+    $('last-update').textContent=latest?'Latest refresh: '+when(latest):'Not refreshed yet';
+    if($('task-dialog').open&&selected&&continuing)renderConversation();
+  }
+  async function load() {state=await api('state');render();}
+  function showSessionNotice(item,conversation,value,error=true){
+    $('session-heading').textContent=error?'Saved session needs attention':'Your session is open';
+    $('session-work-title').textContent=item.title;
+    $('session-notice').textContent=value;
+    $('session-notice').className='notice'+(error?' error':'');
+    $('session-identity').textContent='Saved session: '+(conversation.sessionId||'not recorded');
+    if(!$('session-dialog').open)$('session-dialog').showModal();
+  }
+  async function continueItem(item){
+    const conversation=conversationFor(item);
+    if(conversation?.handler!=='cli'){await openTask(item);return;}
+    if(openingSessions.has(conversation.id))return;
+    if(!canOpen(conversation)){
+      showSessionNotice(item,conversation,'The background turn is still running. Wait for it to finish before opening this saved session.');
+      return;
+    }
+    openingSessions.add(conversation.id);render();
+    message('Opening the same Copilot session. No task replay.');
+    try{
+      const result=await api('open-session',{id:item.id});
+      const blocked=['already-running','checkout-busy','unavailable'].includes(result.status);
+      await load();message(result.message,blocked);
+      if(blocked||result.status==='attention-requested')showSessionNotice(item,conversation,result.message,blocked);
+    }catch(error){message(error.message,true);showSessionNotice(item,conversation,error.message);}
+    finally{openingSessions.delete(conversation.id);render();}
+  }
+  function invalidatePreview(){previewRevision++;preview=null;$('task-preview').hidden=true;$('confirm-task').checked=false;$('approve').disabled=true;}
+  function configureAgents(){
+    const repo=doctor?.repositories.find(r=>r.alias===$('task-repo').value);
+    const choices=repo?.agents||[{id:'__default_cli__',label:'Default CLI'},{id:'__scout__',label:'Scout'}];
+    $('task-agent').replaceChildren(...choices.map(choice=>{const option=make('option',choice.label);option.value=choice.id;return option;}));
+    $('task-agent').value=(!isPullRequest(selected)||!$('task-repo').value)&&choices.some(choice=>choice.id==='__scout__')
+      ?'__scout__':'__default_cli__';
+    $('task-init').disabled=!repo?.initializationConfigured;
+    if($('task-init').disabled)$('task-init').checked=false;
+    invalidatePreview();
+  }
+  function updateMode(){
+    const scout=$('task-agent').value==='__scout__';
+    if(scout&&$('task-mode').value==='develop')$('task-mode').value='specify';
+    $('task-mode').querySelector('option[value="develop"]').disabled=scout;
+    const mode=$('task-mode').value;
+    $('permission-field').hidden=mode!=='specify'||scout;
+    $('task-init').disabled=true;
+    $('task-init').checked=false;
+    $('task-init').closest('label').title='Automatic Corext initialization is unavailable for visible CLI tasks.';
+    $('task-permissions').value=mode==='specify'?(doctor?.specifyPermissionMode||'native'):'native';
+    $('mode-help').textContent=scout?'Scout replies here through its separate dispatcher. If paused, run it from Scout.'
+      :mode==='specify'
+      ?'Describe the task. Draft actions only; no publishing.'
+      :mode==='develop'?'Local edits and tests only. No push or posting.':'Read only. No edits or posting.';
+    if(!scout)$('mode-help').textContent+=' Copilot prompts for unapproved tools. Full tools can run in autopilot. Corext auto-init is unavailable.';
+    if(selected?.source==='documents')$('mode-help').textContent+=' Use the exact linked document; never substitute a search result.';
+    const next=scout?'Help me with this item. '+(selected?.action||'Explain what needs my attention and prepare the next step.')+' Ask me here if you need details. Do not send or publish anything.'
+      :mode==='specify'&&isPullRequest(selected)
+      ?'Assess the active automated comments on this PR. Compare similar previous PRs and verify branch-specific facts. Propose exact replies, which threads can be resolved, and any review still needed. Do not post or resolve yet.'
+      :mode==='develop'?'Make the local code changes I describe here. Preserve unrelated changes; do not commit, push, post replies, or resolve threads.'
+      :(selected?.action||'Review this item and report what needs action.')+'\nDo not edit code or post anything.';
+    if(!$('task-text').value.trim()||$('task-text').value===suggestedTask)$('task-text').value=next;
+    suggestedTask=next;
+    invalidatePreview();
+    if(!continuing&&doctor)$('prepare').disabled=!scout&&!$('task-repo').value;
+  }
+  function renderConversation(){
+    const conversation=conversationFor(selected);if(!conversation)return;
+    const signature=conversation.id+':'+conversation.status+':'+conversation.turns.length;
+    if(signature!==renderedConversation){
+      $('conversation-history').replaceChildren(...conversation.turns.map(turn=>{
+        const card=make('div',null,'turn '+turn.role);card.append(make('strong',turn.role==='user'?'You':conversation.handler==='scout'?'Scout':'Your Buddy'),make('span',' · '+when(turn.at),'small'),make('pre',turn.content));return card;
+      }));
+      $('conversation-status').textContent=statusLabel(conversation.status)+(conversation.status==='queued-scout'?' — waiting for the Scout dispatcher.':'. Mark done when finished.');
+      $('conversation-session').textContent=conversation.handler==='scout'
+        ?`Scout automation: ${conversation.scoutAutomationId||'will be assigned'} · Session: ${conversation.scoutSessionId||'recorded after first response'}`
+        :`CLI session: ${conversation.sessionId||'not recorded for this older task'}`;
+      renderedConversation=signature;
+    }
+    $('prepare').disabled=busy(conversation)||conversation.status==='closed'||!conversation.input;
+    $('task-text').disabled=busy(conversation)||conversation.status==='closed';
+    $('mark-done').disabled=busy(conversation)||conversation.status==='closed';
+    $('retry-task').hidden=!['failed','interrupted'].includes(conversation.status);
+  }
+  async function openTask(item){
+    if(conversationFor(item)?.handler==='cli'){await continueItem(item);return;}
+    selected=item;invalidatePreview();$('task-error').classList.add('hidden');$('task-title').textContent=item.title;
+    const conversation=conversationFor(item);continuing=!!conversation;renderedConversation='';
+    $('conversation-status').hidden=!continuing;$('conversation-history').hidden=!continuing;$('mark-done').hidden=!continuing;
+    $('retry-task').hidden=true;
+    $('conversation-session').textContent='';
+    $('task-text-label').textContent=continuing?'Reply to Scout':'Task instructions';
+    $('prepare').textContent=continuing?'Preview reply':'Preview task';
+    for(const id of ['task-mode','task-repo','task-agent','task-permissions'])$(id).disabled=continuing;
+    $('task-text').disabled=false;
+    $('task-mode').value='review';$('task-init').checked=false;
+    suggestedTask=(item.action||'Review this PR and report what needs action.')+'\nDo not edit code or post anything.';
+    $('task-text').value=continuing?'':feedbackFor(item).note||suggestedTask;
+    $('prepare').disabled=true;updateMode();
+    $('task-dialog').showModal();
+    try {
+      doctor=await api('doctor');
+      if(selected.id!==item.id)return;
+      $('task-repo').replaceChildren(...doctor.repositories.filter(r=>r.exists).map(r=>{const option=make('option',r.description||r.alias);option.value=r.alias;return option;}));
+      const match=doctor.repositories.find(r=>r.exists&&r.path.split(/[\\/]/).at(-1).toLowerCase()===(item.repository||'').split('/').at(-1).toLowerCase());
+      if(match)$('task-repo').value=match.alias;
+      else if(isPullRequest(item)){
+        const option=make('option','Choose a checkout for CLI work');option.value='';
+        $('task-repo').prepend(option);$('task-repo').value='';
+      }else if(doctor.primaryRepository)$('task-repo').value=doctor.primaryRepository;
+      $('source-root').textContent=doctor.sourceRoot?'Code location: '+doctor.sourceRoot:'';
+      $('agent-note').textContent=doctor.agentNote||'';
+      configureAgents();updateMode();
+      if(continuing){
+        const input=conversation.input;
+        if(input){
+          $('task-repo').value=input.repository;configureAgents();
+          const value=conversation.handler==='scout'?'__scout__':input.agent||'__default_cli__';
+          if(!Array.from($('task-agent').options).some(option=>option.value===value)){const option=make('option',value+' (existing session)');option.value=value;$('task-agent').append(option);}
+          $('task-agent').value=value;$('task-mode').value=input.mode;updateMode();
+          $('task-permissions').value=input.permissionMode;$('task-init').checked=!!input.initializeEnvironment;
+        }
+        $('task-init').disabled=true;$('task-text').value='';renderConversation();
+        return;
+      }
+      $('prepare').disabled=$('task-agent').value!=='__scout__'&&!$('task-repo').value;
+    } catch(error){$('task-error').textContent=error.message;$('task-error').classList.remove('hidden');$('prepare').disabled=true;}
+  }
+  function openFeedback(item){selected=item;$('feedback-title').textContent=item.title;$('feedback-status').value=feedbackFor(item).status;$('feedback-note').value=feedbackFor(item).note||'';$('feedback-dialog').showModal();}
+  $('prepare').addEventListener('click',async()=>{
+    $('prepare').disabled=true;invalidatePreview();$('task-error').classList.add('hidden');
+    const revision=previewRevision;
+    try {
+      const agent=$('task-agent').value;
+      if(!agent)throw new Error('Choose an agent or enter its CLI name.');
+      const response=await api(continuing?'reply-preview':'preview',{id:selected.id,repository:$('task-repo').value,agent,mode:$('task-mode').value,permissionMode:$('task-mode').value==='specify'?$('task-permissions').value:'native',task:$('task-text').value,initializeEnvironment:$('task-init').checked});
+      if(revision!==previewRevision||!$('task-dialog').open)return;
+      preview=response;
+      const plan=preview.plan;$('plan-details').replaceChildren();
+      $('approve').textContent=plan.execution==='native-interactive'?'Approve & open Copilot':plan.agent==='__scout__'?'Approve & queue for Scout':'Approve & run';
+      const runtime=plan.agent==='__scout__'?'Scout-managed turn':plan.execution==='native-interactive'
+        ?'Copilot CLI tab; no timeout or Buddy credit cap'
+        :`${plan.timeoutSeconds}s timeout; no Buddy credit cap`;
+      for(const [label,value] of Object.entries({Agent:plan.agentLabel||plan.agent||'Default CLI',Mode:plan.mode,Session:continuing?'Same session':'New linked session',Permissions:plan.permissionMode==='full'?'Full tools (--allow-all) through same-session Continue; no publication':'All native capabilities; Copilot permission prompts',Checkout:plan.workingDirectory,Source:plan.sourceRef,Initialization:plan.initializationScript||'None',Runtime:runtime,MCPs:plan.agent==='__scout__'?'Scout capabilities':`${plan.configuredMcpServers.length} configured`})){
+        $('plan-details').append(make('dt',label),make('dd',value));
+      }
+      if(plan.execution==='native-interactive'){
+        $('plan-details').append(make('dt','Tab name'),make('dd',plan.sessionTitle||'Work-based name'),
+          make('dt','Native defaults'),make('dd',`${plan.terminalDefaults.model} / ${plan.terminalDefaults.context} / ${plan.terminalDefaults.mode}`),
+          make('dt','One-time link'),make('dd','Installs a CLI extension for this initial handoff only. Later prompts go directly to Copilot.'),
+          make('dt','Startup notes'),make('dd',plan.nativeLimitations));
+      }
+      $('plan-task').textContent=plan.task;$('plan-contract').textContent=plan.prompt;$('task-preview').hidden=false;
+    }catch(error){$('task-error').textContent=error.message;$('task-error').classList.remove('hidden');}
+    finally{$('prepare').disabled=false;}
+  });
+  $('confirm-task').addEventListener('change',()=>$('approve').disabled=!preview||!$('confirm-task').checked);
+  for(const id of ['task-text','task-permissions','task-init'])$(id).addEventListener('input',invalidatePreview);
+  $('task-mode').addEventListener('change',updateMode);
+  $('task-repo').addEventListener('change',()=>{configureAgents();updateMode();});
+  $('task-agent').addEventListener('change',updateMode);
+  $('approve').addEventListener('click',async()=>{
+    if(!preview||!$('confirm-task').checked)return;
+    $('approve').disabled=true;
+    try {
+      const native=preview.plan.execution==='native-interactive';
+      await api('approve',{previewId:preview.previewId,approvalHash:preview.plan.approvalHash,confirmed:true});
+      invalidatePreview();$('task-dialog').close();switchPage('progress');await load();
+      message(native?'Opening Copilot with your approved task. Continue stays linked to this session.'
+        :'Queued for Scout. Its dispatcher must be running.');
+    }catch(error){invalidatePreview();$('task-error').textContent=error.message;$('task-error').classList.remove('hidden');}
+  });
+  $('mark-done').addEventListener('click',async()=>{
+    try{await api('feedback',{id:selected.id,status:'done',note:feedbackFor(selected).note||''});$('task-dialog').close();await load();message('Marked done. Session preserved.');}catch(error){message(error.message,true);}
+  });
+  $('retry-task').addEventListener('click',()=>{
+    const conversation=conversationFor(selected);
+    if(!conversation||busy(conversation))return;
+    const lastTask=conversation.turns.findLast(turn=>turn.role==='user');
+    if(lastTask){$('task-text').value=lastTask.content;invalidatePreview();$('task-text').focus();}
+  });
+  $('save-feedback').addEventListener('click',async()=>{
+    try{await api('feedback',{id:selected.id,status:$('feedback-status').value,note:$('feedback-note').value});$('feedback-dialog').close();await load();message('Feedback saved. Source unchanged.');}
+    catch(error){message(error.message,true);}
+  });
+  $('scan').addEventListener('click',async()=>{
+    $('scan').disabled=true;
+    try{const result=await api('scan',{});await load();message(result.reused
+      ?'Using the current scan. No duplicate scan started.'
+      :'PR scan started. In Scout Automations, choose Run now for My Buddy — Daily & on-demand scan to include email, Teams and docs.');}
+    catch(error){message(error.message,true);$('scan').disabled=false;}
+  });
+  document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>{
+    switchPage(button.dataset.page);
+  }));
+  document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('selected',b===button));render();}));
+  document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>$(button.dataset.close).close()));
+  $('search').addEventListener('input',render);
+  async function start(){
+    try{
+      const key=new URLSearchParams(location.hash.slice(1)).get('key');
+      history.replaceState(null,'',location.pathname+location.search);
+      if(key)await api('session',{token:key});
+      await load();
+      setInterval(async()=>{if(!document.hidden)try{await load();}catch(error){message(error.message,true);}},5000);
+    }catch(error){message(error.message,true);}
+  }
+  start();
+</script>
+</body>
+</html>

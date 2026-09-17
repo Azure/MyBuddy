@@ -1,0 +1,24 @@
+# Personal setup and Scout registration (never distribute).
+/buddy.config.json
+/buddy.agent.json
+/Scout-Setup.txt
+/Scan-Automation.txt
+/scout.registration.json
+/*.answers.json
+# Private portal/native data, test scratch, caches and release artifacts.
+/state/
+/media/
+/buddy-tests-*/
+/buddy-setup-tests-*/
+/node_modules/
+/node-compile-cache/
+/releases/
+/setup.answers.json
+**/node_modules/
+*.dpapi
+*.log
+*.zip
+*.lnk
+*.pending
+.DS_Store
+Thumbs.db

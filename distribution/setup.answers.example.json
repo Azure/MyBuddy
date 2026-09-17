@@ -1,0 +1,20 @@
+{
+  "RepositoryPath": "",
+  "RepositoryName": "",
+  "Organization": "",
+  "Project": "",
+  "TenantId": "",
+  "UserEmail": "",
+  "CliCommand": "copilot",
+  "CliHome": "~\\.copilot",
+  "Agent": "",
+  "Alias": "primary",
+  "DailyAt": "09:00",
+  "EmailFolderId": "",
+  "Model": "claude-opus-4.8",
+  "Context": "default",
+  "GitHubLogin": "",
+  "GitHubRepositories": [],
+  "AllowConcurrentSessions": false,
+  "CreateDesktopShortcut": false
+}

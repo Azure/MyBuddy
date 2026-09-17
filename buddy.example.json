@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "windowDays": 7,
+  "schedule": { "timeZone": null, "dailyAt": "09:00", "enabled": false, "automationId": null, "registration": "not-registered" },
+  "email": { "folder": "Inbox/Important", "folderId": null, "includeOtherFolders": false },
+  "teams": { "scope": "chats", "includeChannels": false },
+  "documents": {
+    "enabled": true,
+    "types": ["word", "powerpoint", "excel"],
+    "relationships": ["authored", "coauthored", "review-requested", "mentioned", "input-requested"],
+    "discovery": ["important-folder-notifications", "teams-mentions-and-review-requests"],
+    "mode": "new-documents-only",
+    "skipKnownDocuments": true,
+    "cloudReadMethod": "workiq-grounded-file-read",
+    "verifyCurrentCommentState": false,
+    "notificationAloneProvesActive": false
+  },
+  "briefingFilters": {
+    "excludeIcmMessages": true,
+    "applyToSources": ["email", "teams", "adoComments", "githubComments", "documents"],
+    "applyToCarryover": true,
+    "allowUrgencyOverride": false,
+    "excludeWholeMixedConversations": false
+  },
+  "azureDevOps": {
+    "organization": "https://dev.azure.com/example",
+    "tenantId": null,
+    "project": "ExampleProject",
+    "userEmail": null,
+    "repositories": ["ExampleRepo"],
+    "maxPullRequests": 40,
+    "maxCommentsPerPullRequest": 20,
+    "maxCommentCharacters": 1600,
+    "delegation": {
+      "enabled": false,
+      "trustedCreators": [],
+      "trackedPullRequests": []
+    }
+  },
+  "github": {
+    "enabled": false,
+    "login": null,
+    "repositories": [],
+    "maxPullRequests": 40,
+    "maxPages": 3,
+    "pageSize": 100,
+    "maxCommentsPerPullRequest": 20,
+    "maxCommentCharacters": 1600,
+    "delegation": {
+      "enabled": false,
+      "trustedCreators": [],
+      "trackedPullRequests": []
+    }
+  },
+  "coding": { "enabled": false },
+  "delivery": { "scoutOnly": true, "teamsNotifications": false, "persistSourceContentToDisk": false }
+}

@@ -1,0 +1,20 @@
+Run my My Buddy read-only source scan.
+
+Package directory: __PACKAGE_PATH__
+Portal launcher: __PORTAL_PATH__
+Preferred schedule: every day at __DAILY_AT__ in __TIME_ZONE__.
+
+Read the current scout-integration.txt, buddy.config.json and Scan.Worker.txt in
+this package and execute the complete worker protocol. This automation performs
+the work itself; never launch another automation or a five-minute dispatcher.
+Start the local portal in the background if necessary. Do not open a browser.
+
+Use my configured source scope and independent incremental checkpoints, capped
+at seven days. Important email: exact folder only, paginate to the true window
+end. Teams: chats only. Documents: discover new-to-Buddy requests from scoped
+notifications; skip known documents including closed ones. PR collectors run
+locally; do not duplicate them. Report actual gaps and preserve older work.
+
+Keep raw private data in memory. No source writes, drafts, messages, PR actions,
+code tasks or native session launches. No uploads or proactive Teams messages.
+Return a concise scan summary and coverage limitations.

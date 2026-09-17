@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "allowConcurrentSessions": false,
+  "cliCommand": "copilot",
+  "cliHome": "~\\.copilot",
+  "mcpConfigPath": null,
+  "stateDirectory": ".\\state\\runs",
+  "timeoutSeconds": 900,
+  "sourceRoot": null,
+  "primaryRepository": "example",
+  "specifyPermissionMode": "native",
+  "terminalDefaults": {
+    "model": "claude-opus-4.8",
+    "context": "default",
+    "mode": "interactive",
+    "color": true
+  },
+  "repositories": {
+    "example": {
+      "path": "C:\\src\\your-repository",
+      "agent": "",
+      "initScript": null
+    }
+  }
+}

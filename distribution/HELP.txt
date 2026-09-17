@@ -1,0 +1,156 @@
+MY BUDDY - TEAM PILOT
+
+A Windows-first, private attention portal and native Copilot session bridge.
+This is a source release, not a standalone EXE or an always-on cloud service.
+Use only on approved devices with data your organization permits you to process.
+
+QUICK START
+1. Clone the source repository to a permanent folder you own:
+       git clone https://github.com/Azure/MyBuddy.git
+       cd MyBuddy
+   If using a clean release ZIP instead, extract it first; do not run inside it.
+2. Open PowerShell 7.2 or newer in that folder and run:
+       .\Setup-Buddy.ps1
+3. Follow the generated Scout-Setup.txt in your own Microsoft Scout.
+4. Open the portal:
+       .\Start-BuddyPortal.ps1 -Open
+5. In Scout, run your new daily scan automation using Run now for the first scan.
+
+AUTOMATION-FREE PRECHECK
+For unattended configuration, copy distribution\setup.answers.example.json to
+setup.answers.json and fill your own values. Run:
+    .\Setup-Buddy.ps1 -Doctor -AnswersFile .\setup.answers.json
+    .\Setup-Buddy.ps1 -NonInteractive -AnswersFile .\setup.answers.json
+The first command is read-only. The second creates the same four personal files
+as interactive setup; it does not register a schedule. Use -CreateDesktopShortcut
+only when you want a new shortcut. Get-Help .\Setup-Buddy.ps1 -Full lists options.
+
+Setup checks prerequisites and creates your personal configuration. It does not
+copy the author's account, work inventory, credentials, native sessions or media.
+It does not install software, change CLI permissions, sign you in, start a scan,
+or register a Scout automation behind your back. Review its output before running
+any task. Existing personal configuration is never overwritten.
+
+PREREQUISITES
+- Windows and PowerShell 7.2 or newer.
+- Node.js 22 or newer; the development runtime is Node.js 24.
+- Git, Azure CLI for Azure DevOps reads, and GitHub CLI if enabling GitHub.
+- GitHub Copilot CLI with native session and extension SDK support.
+  Buddy currently uses experimental extension support for the approved first
+  prompt. An incompatible CLI installation is a blocker, not a hidden fallback.
+- Windows Terminal is recommended for named shared-window tabs.
+- Your own Microsoft Scout access and Microsoft 365 sign-in.
+- Your own repository access, local checkouts, Copilot entitlement, model access,
+  and installed/authenticated MCP servers or custom agents.
+
+Follow your organization's approved installation and authentication procedures.
+Azure DevOps uses your Azure CLI identity in the configured tenant; GitHub uses
+your GitHub CLI identity. Scout uses your own Microsoft 365 permissions. Neither
+being installed nor being listed in Doctor proves authentication is complete.
+Do not share PATs, keys, tokens, Copilot profiles or somebody else's folder IDs.
+
+PERSONAL CONFIGURATION
+buddy.config.json selects your source scope, tenant, identity and schedule intent.
+buddy.agent.json selects your checkouts, CLI command/profile and terminal defaults.
+The example files are templates, not working accounts. The initial pilot supports
+an Azure DevOps repository, with optional explicit GitHub configuration. Additional
+repositories/checkouts can be added after reviewing the two JSON files.
+An explicitly disabled GitHub source makes no GitHub API reads; it does not
+advance a scan checkpoint or remove previously stored GitHub work.
+
+The email scope defaults to Inbox/Important. Scout must resolve the exact folder
+in YOUR mailbox before scanning it; no fallback to the entire inbox or mailbox.
+Unknown folder identity is a setup blocker. Documents are discovered from
+Important notifications and Teams chat requests, not a tenant-wide document audit.
+
+The initial default handler is Default CLI. Installed XFE-* agents are offered
+where available; no team agent is bundled. Checkouts select working folders,
+not branches. Buddy never switches branches or creates worktrees automatically.
+Distinct sessions sharing a checkout share its files and active branch; enable
+concurrent sessions only if you are prepared to coordinate those changes.
+Setup defaults to native consent, interactive mode and the ordinary context
+window. The proposed model is claude-opus-4.8; choose an entitled model during
+setup if your account does not have it. Setup reports capabilities, not entitlement.
+
+HOW SCOUT AUTOMATION WORKS
+Every teammate needs their own one daily/on-demand automation, installed through
+Scout's supported automation features after reviewing the generated instructions.
+Copying this folder or changing schedule.enabled does NOT register an automation.
+Do not reuse another person's automation ID. Do not edit Scout's private database
+or use undocumented IPC as an automation registration/trigger shortcut.
+
+The machine must be awake, online and running Scout when a scheduled scan runs.
+No missed-run recovery guarantee is provided. Source checkpoints advance only
+after a successfully covered interval; a later scan is capped at seven days.
+Previously stored work remains even if its source activity is older.
+
+There is no polling dispatcher or nested automation. One worker performs the
+Microsoft 365 scan itself. PR collectors run locally. The external portal cannot
+directly start Scout in this version: Scan for updates starts PR collection and
+queues Microsoft 365 work. Run now in Scout performs a full on-demand scan.
+Queued is not the same as running. Daily schedule and full manual scan use the
+same worker instructions in Scan.Worker.txt.
+
+SCANS AND RETENTION
+Scans use per-source checkpoints and processed-entity receipts to reduce repeat
+triage. Metadata reads are still needed to discover changes. Partial failures
+leave the successful checkpoint unchanged and report gaps rather than inventing
+complete coverage. Important email is paginated; 50 is a request page size, not
+a total mailbox scan cap.
+
+Existing work is retained and deduplicated. Only the user marks it done/dismissed.
+Known document items, including closed ones, are not rescanned for new comments.
+Incident-notification exclusions apply across the briefing. Current Teams scope
+is chats, not meetings or channels. Dedicated bug tracking is not implemented.
+
+WORK AND CONVERSATIONS
+Choose Work on this, give a clear task, select the checkout/handler and review the
+exact preview. Only explicit approval starts the native Copilot session. Buddy
+delivers the approved first prompt once, then the conversation belongs to native
+Copilot. Continue conversation focuses/reopens the same linked session without
+replaying its original task.
+
+Normal native tools/MCP servers remain available. Native permission mode uses
+interactive consent prompts. Explicit Full tools is a separate per-task choice
+and is not the default for new pilot users. No global allow-all settings or credit
+limits are applied. Provider quotas and model availability still apply.
+
+Approving local work does not approve publishing. Sending messages, commenting,
+resolving PR threads, pushing or merging requires a separate exact preview and
+explicit user approval. These agent instructions are best-effort, not a sandbox
+or an enforcement guarantee against every write. Follow organization policies.
+
+If a runtime outlives its terminal, Buddy reports it rather than opening a duplicate
+or killing it automatically. Closing a terminal does not mark the work complete.
+Do not delete session state to "fix" an error without understanding what is active.
+Buddy terminal hosts clean up descendants that inherit their Windows job. Windows
+app execution aliases can escape that job, so automatic cleanup on tab closure is
+not guaranteed. Enter /exit in Copilot's chat input and wait for shutdown before
+closing the tab, so it can flush recent work. Any remaining runtime blocks
+Continue and Done until explicitly approved cleanup.
+Other sessions are not adopted and saved history is retained.
+
+PRIVATE STATE AND UPDATES
+Portal state: %LOCALAPPDATA%\MyBuddy\portal (Windows-user DPAPI).
+Terminal bindings: %LOCALAPPDATA%\MyBuddy\terminals.
+Task state and native history: paths in your personal agent configuration.
+DPAPI is an at-rest protection, not permission to store prohibited content.
+Keep protected documents at their source and use authorized grounded reads.
+
+Use one installed Buddy folder per Windows account for this pilot. A second copy
+must not attach to or replace another copy's live portal. Close your own portal
+normally before moving/upgrading it. This release is first-install tooling, not
+an automatic updater or uninstaller; retain your private configuration and state.
+
+DISTRIBUTION
+Do not send your installed folder after setup. It contains personal config and
+generated Scout instructions. Share this clean source repository, or create a
+clean release ZIP using Export-Buddy.ps1, which uses an explicit source allowlist.
+No media, account configuration, automation identifiers, tokens, caches, or private
+state should be committed to a team repository. The release manifest provides
+file hashes for integrity checking; it is not a code-signing trust guarantee.
+
+RELEASE LIMITATIONS
+This is an internal engineering pilot. No hosted deployment, EXE installer,
+automatic update channel or centrally managed multi-user service is included.
+The existing integration limitations are not solved by packaging.

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" role="img" aria-labelledby="title">
+  <title id="title">My Buddy — The Loop</title>
+  <rect width="104" height="104" rx="31" fill="#0b83bc"/>
+  <path d="M33 27v54 M33 27h18c26 0 29 28 4 28H33 M33 55h24c25 0 24 27 0 27H33"
+        fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="57" cy="39" r="4" fill="#b6e7fc"/>
+  <circle cx="61" cy="68" r="4" fill="#b6e7fc"/>
+</svg>

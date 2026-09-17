@@ -1,0 +1,52 @@
+SET UP MY PERSONAL MY BUDDY SCAN
+
+My package is at: __PACKAGE_PATH__
+Portal launcher: __PORTAL_PATH__
+Requested daily time: __DAILY_AT__
+Time zone: __TIME_ZONE__
+
+Please help register this installation in MY Scout. Do not copy the author's
+identity, mailbox folder, work data, automation IDs, sessions, or credentials.
+Do not run a source scan or execute a coding task during registration.
+
+1. Read HELP.txt, scout-integration.txt, Scan.Worker.txt, buddy.config.json and
+   buddy.agent.json from this package. Inspect the actual supported Scout tools.
+   Check my own M365 sign-in. If needed, guide me through sign-in normally.
+
+2. Resolve the configured Important folder in MY mailbox using the folder-listing
+   tools and its exact parent path. If absent or ambiguous, ask me rather than
+   scanning another folder. Show the resolved folder name and scope for approval,
+   then save its ID only to my personal buddy.config.json.
+   Confirm that the configured ADO identity/tenant and optional GitHub login are
+   mine; do not guess identities or broaden repositories. Document discovery stays
+   new-to-Buddy from Important notifications and Teams chats.
+
+3. Register/update a personal My Buddy skill using Scout's supported custom-skill
+   tool/UI, pointing to this installation's scout-integration.txt. Check existing
+   skills first and do not overwrite an unrelated skill of the same name.
+
+4. Read Scan-Automation.txt from this package. List existing automations and inspect
+   any that refer to this EXACT package path. Reuse the matching automation rather
+   than creating duplicates. Never modify another application's automation.
+   Preview the exact prompt, daily time/time zone, enabled state and no-Teams-
+   notification policy. Ask for my confirmation before creating/updating it.
+   There must be one daily/on-demand automation, no polling or nested workers.
+   Use supported Scout automation tools/UI only, not database/profile edits.
+   If the scheduler's timezone cannot be explicitly set, confirm Scout's effective
+   timezone matches __TIME_ZONE__ before activating this schedule.
+
+5. On successful registration only, record the actual returned automation ID,
+   this package path and chosen schedule in a personal scout.registration.json.
+   In buddy.config.json, set schedule.automationId to that returned ID,
+   schedule.registration to "registered", and schedule.enabled to the actual
+   enabled state. These fields record successful registration, not a substitute
+   for it. If registration fails, leave enabled=false and
+   surface the failure. Never claim the automation exists based on this text.
+
+6. Explain how to open Buddy with Start-BuddyPortal.ps1 -Open and run a full manual
+   scan with Run now in Scout. The portal button cannot directly launch Scout in
+   this version. Scheduled scans need the machine awake, online and Scout running.
+   Ask before the first actual scan. Do not launch native Copilot during setup.
+
+All work context remains personal to me. No permission escalation, background
+login bypass, external publication, or globally approved CLI tools.
