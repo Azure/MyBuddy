@@ -6,6 +6,8 @@ Interactive teammate setup for the Windows My Buddy pilot.
 .EXAMPLE
 .\Setup-Buddy.ps1 -NonInteractive -AnswersFile .\setup.answers.json
 .EXAMPLE
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\Setup-Buddy.ps1 -NonInteractive -RepositoryPath 'C:\src\repo' -RepositoryName 'repo' -Organization 'https://dev.azure.com/org' -Project 'project' -TenantId '00000000-0000-0000-0000-000000000001' -UserEmail 'user@example.com' -Alias 'primary' -CliCommand 'copilot' -CliHome '~\.copilot' -TimeZone 'UTC' -DailyAt '09:00' -Model 'claude-opus-4.8' -Context 'default' -DisableGitHub
+.EXAMPLE
 .\Setup-Buddy.ps1 -Doctor -AnswersFile .\setup.answers.json
 .DESCRIPTION
 AnswersFile is a JSON object with parameter names and explicit values (booleans
@@ -41,6 +43,7 @@ param(
     [ValidateSet('default','long_context')][string]$Context,
     [string]$GitHubLogin,
     [string[]]$GitHubRepositories,
+    [switch]$DisableGitHub,
     [switch]$AllowConcurrentSessions,
     [switch]$CreateDesktopShortcut,
     [string]$Destination
@@ -55,8 +58,23 @@ if ($AnswersFile) {
 }
 foreach ($key in $PSBoundParameters.Keys) {
     if ($key -in @('AnswersFile','NonInteractive','Doctor','Verbose','Debug','ErrorAction','WarningAction','InformationAction','ProgressAction',
-        'ErrorVariable','WarningVariable','InformationVariable','OutVariable','OutBuffer','PipelineVariable')) { continue }
-    $answers[$key] = if ($key -in @('AllowConcurrentSessions','CreateDesktopShortcut')) { [bool]$PSBoundParameters[$key] } else { $PSBoundParameters[$key] }
+        'ErrorVariable','WarningVariable','InformationVariable','OutVariable','OutBuffer','PipelineVariable','DisableGitHub')) { continue }
+    if ($key -in @('AllowConcurrentSessions','CreateDesktopShortcut')) {
+        $answers[$key] = [bool]$PSBoundParameters[$key]
+        continue
+    }
+    if ($key -eq 'GitHubRepositories' -and $null -eq $PSBoundParameters[$key]) {
+        $answers[$key] = [string[]]@()
+        continue
+    }
+    $answers[$key] = $PSBoundParameters[$key]
+}
+if ($DisableGitHub) {
+    if ($PSBoundParameters.ContainsKey('GitHubLogin') -or $PSBoundParameters.ContainsKey('GitHubRepositories')) {
+        throw 'DisableGitHub cannot be combined with GitHubLogin or GitHubRepositories.'
+    }
+    $answers.GitHubLogin = ''
+    $answers.GitHubRepositories = [string[]]@()
 }
 function Read-SetupAnswer {
     param([string]$Name, [string]$Prompt, [string]$Default = '')

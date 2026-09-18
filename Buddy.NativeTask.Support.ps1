@@ -85,8 +85,15 @@ function Get-BuddyNativeSupport {
     $distribution = $candidates | Where-Object {
         Test-Path -LiteralPath (Join-Path $_ 'copilot-sdk\extension.js') -PathType Leaf
     } | Select-Object -First 1
-    if (-not $distribution) { throw 'The installed CLI has no supported Copilot extension SDK. Native task startup is unavailable; no hidden fallback will run.' }
-    $sdk = Join-Path $distribution 'copilot-sdk\extension.js'
+    $sdkEvidence = if ($distribution) {
+        (Get-FileHash -LiteralPath (Join-Path $distribution 'copilot-sdk\extension.js')).Hash
+    } else {
+        $help = (& $cli.Source '--help' 2>&1 | Out-String)
+        if ($LASTEXITCODE -ne 0 -or $help -notmatch '(?m)^\s*--extension-sdk-path\b') {
+            throw 'The installed CLI has no supported Copilot extension SDK. Native task startup is unavailable; no hidden fallback will run.'
+        }
+        (Get-FileHash -LiteralPath $cli.Source).Hash
+    }
     # Do not override an administrator/user disabling extensions.
     $settingsFiles = @((Join-Path $Config.cliHome 'settings.json'), (Join-Path $Config.cliHome 'config.json'))
     foreach ($relative in @('.github\copilot\settings.json','.github\copilot\settings.local.json','.claude\settings.json','.claude\settings.local.json')) {
@@ -104,7 +111,7 @@ function Get-BuddyNativeSupport {
         }
     }
     [pscustomobject]@{
-        hash = Get-BuddyHash ((Get-FileHash -LiteralPath $sdk).Hash + '|' +
+        hash = Get-BuddyHash ($sdkEvidence + '|' +
             (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'Buddy.NativeTask.Extension.mjs')).Hash + '|' +
             (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'Receive-BuddyNativeTask.ps1')).Hash)
     }
